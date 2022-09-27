@@ -1,54 +1,61 @@
-import { AnimatePresence, View } from "moti";
-import { useReducer } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import * as React from "react";
+import { MotiView } from "moti";
+import { View, StyleSheet, Image } from "react-native";
+import {Feather} from "@expo/vector-icons"
+import { Easing } from "react-native-reanimated";
 
-function Shape({ bg }) {
-  return (
-    <View
-      from={{
-        opacity: 0,
-        scale: 0.5,
-      }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-      }}
-      exit={{
-        opacity: 0,
-        scale: 0.9,
-      }}
-      style={[styles.shape, { backgroundColor: bg }]}
-    />
-  );
-}
+const _color = '#6e01ef'
+const _size = 100
 
 export default function App() {
-  const [visible, toggle] = useReducer((s) => !s, true);
 
   return (
-    <Pressable onPress={toggle} style={styles.container}>
-      <AnimatePresence exitBeforeEnter>
-        {visible && <Shape bg="hotpink" key="hotpink" />}
-        {!visible && <Shape bg="cyan" key="cyan" />}
-      </AnimatePresence>
-    </Pressable>
+    <View style={styles.container}>
+      <View style={[styles.dot, styles.center]}>
+        {[...Array(3).keys()].map((index) => {
+          return (
+            <MotiView
+              from={{ opacity: 0.7, scale: 1 }}
+              animate={{ opacity: 0, scale: 4 }}
+              transition={{
+                type: "timing",
+                duration: 2000,
+                easing: Easing.out(Easing.ease),
+                delay: index * 400,
+                repeatReverse: false,
+                loop: true,
+              }}
+              key={index}
+              style={[StyleSheet.absoluteFillObject, styles.dot]}
+            />
+          );
+        })}
+        <Feather name="phone-outgoing" size={32} color="#fff" />
+        {/* <Image 
+          source={require('./DP.jpg')}
+          style={{width: _size, height: _size, borderRadius: _size}}
+        /> */}
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  shape: {
-    justifyContent: "center",
-    height: 250,
-    width: 250,
-    borderRadius: 25,
-    marginRight: 10,
-    backgroundColor: "white",
-  },
   container: {
     flex: 1,
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row",
-    backgroundColor: "#9c1aff",
+  },
+  dot: {
+    width: _size,
+    height: _size,
+    borderRadius: _size,
+    backgroundColor: _color,
+  },
+  center: {
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
+
